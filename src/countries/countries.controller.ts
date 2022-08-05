@@ -1,4 +1,16 @@
-import { Controller } from '@nestjs/common';
+import { Controller, Get, Query } from '@nestjs/common';
+import { CountriesService } from './countries.service';
+import { CountriesNames } from './interfaces/countries.interface';
 
 @Controller('countries')
-export class CountriesController {}
+export class CountriesController {
+  constructor(private countriesService: CountriesService) {}
+
+  @Get()
+  async getCountries(@Query() query: CountriesNames) {
+    return await this.countriesService.fetchCountries(
+      query.countryOne,
+      query.countryTwo,
+    );
+  }
+}
