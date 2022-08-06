@@ -1,17 +1,17 @@
-import { CovidCountriesDto } from '../dto/covid-country.dto';
 import * as json2csv from 'json2csv';
 import { v4 as uuidv4 } from 'uuid';
 import * as fs from 'fs';
+import { CovidCountry, File } from '../interfaces/countries.interface';
 
 export class CountriesHelper {
-  static insertDate(countries: CovidCountriesDto[]) {
+  static insertDate(countries: CovidCountry[]) {
     const parseCountries = countries.map((country) => {
       country.date = new Date().toDateString();
       return country;
     });
     return parseCountries;
   }
-  static async toCsv(data: CovidCountriesDto[]) {
+  static async toCsv(data: CovidCountry[]): Promise<File> {
     const fields = [
       'country',
       'todayCases',

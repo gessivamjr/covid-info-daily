@@ -2,8 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { Countries, CountriesDocument } from './schemas/countries.schema';
-import { CovidCountriesDto } from './dto/covid-country.dto';
 import { CountriesHelper } from './helper/countries.helper';
+import { CovidCountry } from './interfaces/countries.interface';
 import fetch from 'node-fetch';
 @Injectable()
 export class CountriesService {
@@ -17,19 +17,17 @@ export class CountriesService {
       const response = await fetch(
         `https://disease.sh/v3/covid-19/countries/${countryOne}%2C%20${countryTwo}?yesterday=yesterday`,
       );
-      const countriesData: CovidCountriesDto[] = await response.json();
-      const parsedCountries = CountriesHelper.insertDate(countriesData);
-      return parsedCountries;
+      const countriesData: CovidCountry[] = await response.json();
+      return CountriesHelper.insertDate(countriesData);
     } catch (error) {
       throw new Error('Cannot fetch countries from Disease API');
     }
   }
 
-  async exportFile(countryOne: string, countryTwo: string) {
+  async convertFile(countryOne: string, countryTwo: string) {
     try {
       const countries = await this.fetchCountries(countryOne, countryTwo);
-      const exportData = await CountriesHelper.toCsv(countries);
-      return exportData;
+      return await CountriesHelper.toCsv(countries);
     } catch (error) {
       throw new Error('Error while exporting file');
     }
