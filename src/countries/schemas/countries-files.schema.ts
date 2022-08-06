@@ -1,10 +1,10 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 
-export type CountriesDocument = Countries & Document;
+export type CountriesDocument = CountriesFiles & Document;
 
 @Schema({ timestamps: true })
-export class Countries {
+export class CountriesFiles {
   @Prop({ required: true })
   westernFilename: string;
 
@@ -12,4 +12,4 @@ export class Countries {
   easternFilename: string;
 }
 
-export const CountriesSchema = SchemaFactory.createForClass(Countries);
+export const CountriesSchema = SchemaFactory.createForClass(CountriesFiles);

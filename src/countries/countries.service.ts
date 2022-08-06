@@ -1,14 +1,17 @@
 import { Injectable } from '@nestjs/common';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
-import { Countries, CountriesDocument } from './schemas/countries.schema';
+import {
+  CountriesDocument,
+  CountriesFiles,
+} from './schemas/countries-files.schema';
 import { CountriesHelper } from './helper/countries.helper';
 import { CovidCountry } from './interfaces/countries.interface';
 import fetch from 'node-fetch';
 @Injectable()
 export class CountriesService {
   constructor(
-    @InjectModel(Countries.name)
+    @InjectModel(CountriesFiles.name)
     private countriesModel: Model<CountriesDocument>,
   ) {}
 
@@ -33,7 +36,7 @@ export class CountriesService {
     }
   }
 
-  async createDocument() {
+  async createDocument(): Promise<CountriesFiles> {
     const westernCountriesFile = await this.convertJson('usa', 'brazil');
     const easternCountriesFile = await this.convertJson('russia', 'china');
     return await new this.countriesModel({
