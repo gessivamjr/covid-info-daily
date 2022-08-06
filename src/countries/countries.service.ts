@@ -24,12 +24,26 @@ export class CountriesService {
     }
   }
 
-  async convertFile(countryOne: string, countryTwo: string) {
+  async convertJson(countryOne: string, countryTwo: string) {
     try {
       const countries = await this.fetchCountries(countryOne, countryTwo);
       return await CountriesHelper.toCsv(countries);
     } catch (error) {
       throw new Error('Error while exporting file');
+    }
+  }
+
+  async createDocument() {
+    try {
+      const westernCountriesFile = await this.convertJson('usa', 'brazil');
+      const easternCountriesFile = await this.convertJson('russia', 'china');
+      const filesPath: string[] = [
+        westernCountriesFile.path,
+        easternCountriesFile.path,
+      ];
+      return await new this.countriesModel(filesPath).save();
+    } catch (error) {
+      throw new Error('Error while saving document');
     }
   }
 }
