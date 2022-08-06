@@ -17,7 +17,7 @@ export class CountriesService {
       const parsedCountries = CountriesHelper.insertDate(countriesData);
       return parsedCountries;
     } catch (error) {
-      console.error('Cannot fetch countries from Disease API');
+      throw new Error('Cannot fetch countries from Disease API');
     }
   }
 
@@ -31,19 +31,30 @@ export class CountriesService {
       'critical',
     ];
     const options = { fields };
-    const csv = await json2csv.parseAsync(data, options);
-    const filename = uuidv4() + '.csv';
-    fs.writeFile(`./src/countries/csv-exports/${filename}`, csv, (err) => {
-      if (err) {
-        throw new Error('Error while writing file');
-      }
-    });
-    return { msg: 'File created', name: `${filename}` };
+
+    try {
+      const csv = await json2csv.parseAsync(data, options);
+      const filename = uuidv4() + '.csv';
+      const file = `./src/countries/csv-exports/${filename}`;
+
+      fs.writeFile(file, csv, (err) => {
+        if (err) {
+          throw new Error('Error while writing file');
+        }
+      });
+      return { name: filename, path: file };
+    } catch (error) {
+      throw new Error('Error to convert json');
+    }
   }
 
   async exportFile(countryOne: string, countryTwo: string) {
-    const countries = await this.fetchCountries(countryOne, countryTwo);
-    const exportData = await this.toCsv(countries);
-    return exportData;
+    try {
+      const countries = await this.fetchCountries(countryOne, countryTwo);
+      const exportData = await this.toCsv(countries);
+      return exportData;
+    } catch (error) {
+      throw new Error('Error while exporting file');
+    }
   }
 }
