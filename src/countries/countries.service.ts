@@ -1,4 +1,7 @@
 import { Injectable } from '@nestjs/common';
+import { Model } from 'mongoose';
+import { InjectModel } from '@nestjs/mongoose';
+import { Countries, CountriesDocument } from './schemas/countries.schema';
 import { CovidCountriesDto } from './dto/covid-country.dto';
 import { CountriesHelper } from './helper/countries.helper';
 import fetch from 'node-fetch';
@@ -8,6 +11,11 @@ import * as fs from 'fs';
 
 @Injectable()
 export class CountriesService {
+  constructor(
+    @InjectModel(Countries.name)
+    private countriesModel: Model<CountriesDocument>,
+  ) {}
+
   async fetchCountries(countryOne: string, countryTwo: string) {
     try {
       const response = await fetch(
