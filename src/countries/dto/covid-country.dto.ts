@@ -1,4 +1,4 @@
-export class CovidCountryDto {
+export class CovidCountriesDto {
   updated: number;
   country: string;
   countryInfo: {
@@ -29,4 +29,5 @@ export class CovidCountryDto {
   activePerOneMillion: number;
   recoveredPerOneMillion: number;
   criticalPerOneMillion: number;
+  date?: string;
 }
