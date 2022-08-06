@@ -5,10 +5,6 @@ import { Countries, CountriesDocument } from './schemas/countries.schema';
 import { CovidCountriesDto } from './dto/covid-country.dto';
 import { CountriesHelper } from './helper/countries.helper';
 import fetch from 'node-fetch';
-import * as json2csv from 'json2csv';
-import { v4 as uuidv4 } from 'uuid';
-import * as fs from 'fs';
-
 @Injectable()
 export class CountriesService {
   constructor(
@@ -29,37 +25,10 @@ export class CountriesService {
     }
   }
 
-  async toCsv(data: CovidCountriesDto[]) {
-    const fields = [
-      'country',
-      'todayCases',
-      'todayDeaths',
-      'date',
-      'active',
-      'critical',
-    ];
-    const options = { fields };
-
-    try {
-      const csv = await json2csv.parseAsync(data, options);
-      const filename = uuidv4() + '.csv';
-      const file = `./src/countries/csv-exports/${filename}`;
-
-      fs.writeFile(file, csv, (err) => {
-        if (err) {
-          throw new Error('Error while writing file');
-        }
-      });
-      return { name: filename, path: file };
-    } catch (error) {
-      throw new Error('Error to convert json');
-    }
-  }
-
   async exportFile(countryOne: string, countryTwo: string) {
     try {
       const countries = await this.fetchCountries(countryOne, countryTwo);
-      const exportData = await this.toCsv(countries);
+      const exportData = await CountriesHelper.toCsv(countries);
       return exportData;
     } catch (error) {
       throw new Error('Error while exporting file');
