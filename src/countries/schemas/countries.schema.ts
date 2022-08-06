@@ -5,8 +5,11 @@ export type CountriesDocument = Countries & Document;
 
 @Schema({ timestamps: true })
 export class Countries {
-  @Prop({ required: true, type: [String] })
-  filename: string[];
+  @Prop({ required: true })
+  westernFilename: string;
+
+  @Prop({ required: true })
+  easternFilename: string;
 }
 
 export const CountriesSchema = SchemaFactory.createForClass(Countries);

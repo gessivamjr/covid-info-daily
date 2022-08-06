@@ -34,16 +34,11 @@ export class CountriesService {
   }
 
   async createDocument() {
-    try {
-      const westernCountriesFile = await this.convertJson('usa', 'brazil');
-      const easternCountriesFile = await this.convertJson('russia', 'china');
-      const filesPath: string[] = [
-        westernCountriesFile.path,
-        easternCountriesFile.path,
-      ];
-      return await new this.countriesModel(filesPath).save();
-    } catch (error) {
-      throw new Error('Error while saving document');
-    }
+    const westernCountriesFile = await this.convertJson('usa', 'brazil');
+    const easternCountriesFile = await this.convertJson('russia', 'china');
+    return await new this.countriesModel({
+      westernFilename: westernCountriesFile.name,
+      easternFilename: easternCountriesFile.name,
+    }).save();
   }
 }
