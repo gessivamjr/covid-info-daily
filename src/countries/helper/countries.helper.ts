@@ -25,7 +25,7 @@ export class CountriesHelper {
     try {
       const csv = await json2csv.parseAsync(data, options);
       const filename = uuidv4() + '.csv';
-      const file = `./src/countries/csv-exports/${filename}`;
+      const file = `./src/countries/exports/${filename}`;
 
       fs.writeFile(file, csv, (err) => {
         if (err) {
