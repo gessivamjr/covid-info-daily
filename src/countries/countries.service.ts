@@ -36,7 +36,7 @@ export class CountriesService {
     }
   }
 
-  async createDocument(): Promise<CountriesFiles> {
+  async createMongoDocument(): Promise<CountriesFiles> {
     const westernCountriesFile = await this.convertJson('usa', 'brazil');
     const easternCountriesFile = await this.convertJson('russia', 'china');
     return await new this.countriesModel({

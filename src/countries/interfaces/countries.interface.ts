@@ -3,7 +3,7 @@ interface CountriesNames {
   countryTwo: string;
 }
 
-interface CsvFilePath {
+interface FilePath {
   name: string;
   path: string;
 }
@@ -42,4 +42,4 @@ interface CovidCountry {
   date?: string;
 }
 
-export { CountriesNames, CovidCountry, CsvFilePath };
+export { CountriesNames, CovidCountry, FilePath };

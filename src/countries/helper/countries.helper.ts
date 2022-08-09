@@ -1,7 +1,7 @@
+import { CovidCountry, FilePath } from '../interfaces/countries.interface';
 import * as json2csv from 'json2csv';
 import { v4 as uuidv4 } from 'uuid';
 import * as fs from 'fs';
-import { CovidCountry, CsvFilePath } from '../interfaces/countries.interface';
 
 export class CountriesHelper {
   static insertDate(countries: CovidCountry[]) {
@@ -11,7 +11,8 @@ export class CountriesHelper {
     });
     return parseCountries;
   }
-  static async toCsv(data: CovidCountry[]): Promise<CsvFilePath> {
+
+  static async toCsv(data: CovidCountry[]): Promise<FilePath> {
     const fields = [
       'country',
       'todayCases',
