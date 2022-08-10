@@ -28,21 +28,20 @@ export class CountriesService {
     }
   }
 
-  async convertJson(countryOne: string, countryTwo: string) {
+  async convertJson(countriesJson: CovidCountry[]) {
     try {
-      const countries = await this.fetchCountries(countryOne, countryTwo);
-      return await CountriesHelper.toCsv(countries);
+      return await CountriesHelper.toCsv(countriesJson);
     } catch (error) {
       throw new Error('Error while exporting file');
     }
   }
 
-  async createMongoDocument(): Promise<CountriesFiles> {
-    const westernCountriesFile = await this.convertJson('usa', 'brazil');
-    const easternCountriesFile = await this.convertJson('russia', 'china');
-    return await new this.countriesModel({
-      westernFilename: westernCountriesFile.name,
-      easternFilename: easternCountriesFile.name,
-    }).save();
-  }
+  // async createMongoDocument(): Promise<CountriesFiles> {
+  //   const westernCountriesFile = await this.convertJson('usa', 'brazil');
+  //   const easternCountriesFile = await this.convertJson('russia', 'china');
+  //   return await new this.countriesModel({
+  //     westernFilename: westernCountriesFile.name,
+  //     easternFilename: easternCountriesFile.name,
+  //   }).save();
+  // }
 }

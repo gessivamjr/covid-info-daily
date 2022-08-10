@@ -6,6 +6,7 @@ import * as fs from 'fs';
 @Injectable()
 export class GofileService {
   constructor(private readonly httpService: HttpService) {}
+
   async getServer(): Promise<string> {
     const response = await this.httpService.axiosRef.get(
       'https://api.gofile.io/getServer',
@@ -14,11 +15,11 @@ export class GofileService {
     return await serverData.data.server;
   }
 
-  async createFormData(targetFile: string) {
+  async createFormData(filePath: string) {
     const formData = new FormData();
     formData.append('acc_token', process.env.GOFILE_ACCOUNT);
     formData.append('folder_Id', process.env.GOFILE_FOLDER);
-    formData.append('file', fs.createReadStream(targetFile));
+    formData.append('file', fs.createReadStream(filePath));
     return formData;
   }
 
