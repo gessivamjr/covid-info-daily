@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { HttpService } from '@nestjs/axios';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import {
@@ -7,21 +8,21 @@ import {
 } from './schemas/countries-files.schema';
 import { CountriesHelper } from './helper/countries.helper';
 import { CovidCountry } from './interfaces/countries.interface';
-import fetch from 'node-fetch';
 @Injectable()
 export class CountriesService {
   constructor(
     @InjectModel(CountriesFiles.name)
     private countriesModel: Model<CountriesDocument>,
+    private readonly httpService: HttpService,
   ) {}
 
   async fetchCountries(countryOne: string, countryTwo: string) {
     try {
-      const response = await fetch(
+      const response = await this.httpService.axiosRef.get(
         `https://disease.sh/v3/covid-19/countries/${countryOne}%2C%20${countryTwo}?yesterday=yesterday`,
       );
-      const countriesData: CovidCountry[] = await response.json();
-      return CountriesHelper.insertDate(countriesData);
+      const countriesData: CovidCountry[] = await response.data;
+      return countriesData;
     } catch (error) {
       throw new Error('Cannot fetch countries from Disease API');
     }
