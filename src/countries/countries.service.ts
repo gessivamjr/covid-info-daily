@@ -22,7 +22,7 @@ export class CountriesService {
         `https://disease.sh/v3/covid-19/countries/${countryOne}%2C%20${countryTwo}?yesterday=yesterday`,
       );
       const countriesData: CovidCountry[] = await response.data;
-      return countriesData;
+      return CountriesHelper.insertDate(countriesData);
     } catch (error) {
       throw new Error('Cannot fetch countries from Disease API');
     }
