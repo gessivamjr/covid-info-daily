@@ -60,4 +60,10 @@ export class GofileService {
 
     return { westernFileData, easternFileData };
   }
+
+  async removeLocalFile(filepath: string) {
+    return fs.rm(filepath, (err) => {
+      if (err) throw new Error(`Error while removing ${filepath}`);
+    });
+  }
 }

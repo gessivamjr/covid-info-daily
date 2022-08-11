@@ -10,7 +10,7 @@ export class JobsService {
     private readonly gofileService: GofileService,
   ) {}
 
-  @Cron(CronExpression.EVERY_DAY_AT_10PM)
+  @Cron(CronExpression.EVERY_30_SECONDS)
   async handleCron() {
     const westernData = await this.countriesService.fetchCountries(
       'usa',
@@ -30,6 +30,9 @@ export class JobsService {
       easternCsvFile.name,
     );
 
-    return await this.gofileService.uploadFile(westernCsvFile, easternCsvFile);
+    await this.gofileService.uploadFile(westernCsvFile, easternCsvFile);
+
+    await this.gofileService.removeLocalFile(westernCsvFile.path);
+    await this.gofileService.removeLocalFile(easternCsvFile.path);
   }
 }
