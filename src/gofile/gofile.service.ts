@@ -2,6 +2,7 @@ import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
 import * as FormData from 'form-data';
 import * as fs from 'fs';
+import { FilePath } from 'src/countries/interfaces/countries.interface';
 
 @Injectable()
 export class GofileService {
@@ -15,37 +16,48 @@ export class GofileService {
     return await serverData.data.server;
   }
 
-  async createFormData(filePath: string) {
+  async createFormData(filepath: string, filename: string) {
     const formData = new FormData();
-    formData.append('acc_token', process.env.GOFILE_ACCOUNT);
-    formData.append('folder_Id', process.env.GOFILE_FOLDER);
-    formData.append('file', fs.createReadStream(filePath));
+    formData.append('token', process.env.GOFILE_ACCOUNT);
+    formData.append('folderId', process.env.GOFILE_FOLDER);
+    formData.append('filepath', fs.createReadStream(filepath));
+    formData.append('filename', filename);
     return formData;
   }
 
-  async uploadFile(westernFile: string, easternFile: string) {
+  async uploadFile(westernFile: FilePath, easternFile: FilePath) {
     const server = await this.getServer();
-    const uploadUrl = `https://${server}.gofile.io/uploadFile`;
+    const uploadUrl = `https://${server}.gofile.io/uploadFile/`;
 
-    const westernFormData = await this.createFormData(westernFile);
-    const easternFormData = await this.createFormData(easternFile);
+    const westernFormData = await this.createFormData(
+      westernFile.path,
+      westernFile.name,
+    );
+    const easternFormData = await this.createFormData(
+      easternFile.path,
+      easternFile.name,
+    );
 
     const westernUpload = await this.httpService.axiosRef.post(
       uploadUrl,
       westernFormData,
       {
-        headers: westernFormData.getHeaders(),
+        headers: { 'Content-Type': 'multipart/form-data' },
       },
     );
+
+    const westernFileData = await westernUpload.data;
 
     const easternUpload = await this.httpService.axiosRef.post(
       uploadUrl,
       easternFormData,
       {
-        headers: easternFormData.getHeaders(),
+        headers: { 'Content-Type': 'multipart/form-data' },
       },
     );
 
-    return { westernUpload, easternUpload };
+    const easternFileData = await easternUpload.data;
+
+    return { westernFileData, easternFileData };
   }
 }

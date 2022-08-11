@@ -1,19 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
-import { Model } from 'mongoose';
-import { InjectModel } from '@nestjs/mongoose';
-import {
-  CountriesDocument,
-  CountriesFiles,
-} from './schemas/countries-files.schema';
 import { CountriesHelper } from './helper/countries.helper';
 import { CovidCountry } from './interfaces/countries.interface';
+import { CountriesRepository } from './repositories/countries.repository';
 @Injectable()
 export class CountriesService {
   constructor(
-    @InjectModel(CountriesFiles.name)
-    private countriesModel: Model<CountriesDocument>,
     private readonly httpService: HttpService,
+    private readonly countriesRepository: CountriesRepository,
   ) {}
 
   async fetchCountries(countryOne: string, countryTwo: string) {
@@ -36,12 +30,10 @@ export class CountriesService {
     }
   }
 
-  // async createMongoDocument(): Promise<CountriesFiles> {
-  //   const westernCountriesFile = await this.convertJson('usa', 'brazil');
-  //   const easternCountriesFile = await this.convertJson('russia', 'china');
-  //   return await new this.countriesModel({
-  //     westernFilename: westernCountriesFile.name,
-  //     easternFilename: easternCountriesFile.name,
-  //   }).save();
-  // }
+  async registerFilenames(westernFilename: string, easternFilename: string) {
+    return await this.countriesRepository.create(
+      westernFilename,
+      easternFilename,
+    );
+  }
 }

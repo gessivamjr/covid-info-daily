@@ -2,6 +2,7 @@ import { HttpModule } from '@nestjs/axios';
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { CountriesService } from './countries.service';
+import { CountriesRepository } from './repositories/countries.repository';
 import {
   CountriesFiles,
   CountriesSchema,
@@ -14,7 +15,7 @@ import {
       { name: CountriesFiles.name, schema: CountriesSchema },
     ]),
   ],
-  controllers: [],
-  providers: [CountriesService],
+  providers: [CountriesService, CountriesRepository],
+  exports: [CountriesService],
 })
 export class CountriesModule {}

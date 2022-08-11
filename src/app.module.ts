@@ -4,8 +4,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { ScheduleModule } from '@nestjs/schedule';
 import { CountriesModule } from './countries/countries.module';
 import { GofileModule } from './gofile/gofile.module';
-import { TasksService } from './tasks/tasks.service';
-import { TasksModule } from './tasks/tasks.module';
+import { JobsService } from './jobs/jobs.service';
 
 @Module({
   imports: [
@@ -14,9 +13,8 @@ import { TasksModule } from './tasks/tasks.module';
     ScheduleModule.forRoot(),
     CountriesModule,
     GofileModule,
-    TasksModule,
   ],
   controllers: [],
-  providers: [TasksService],
+  providers: [JobsService],
 })
 export class AppModule {}

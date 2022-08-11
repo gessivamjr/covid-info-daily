@@ -5,5 +5,6 @@ import { GofileService } from './gofile.service';
 @Module({
   imports: [HttpModule],
   providers: [GofileService],
+  exports: [GofileService],
 })
 export class GofileModule {}
